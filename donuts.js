@@ -1,10 +1,11 @@
 var donutOrder = function() {
 	var donutSelected = 0, 
 	batterSelected = 0,
-	jellySelected = 0, 
-	toppingSelected = 0;
+	toppingSelected = 0,
+	sprinkleSelected = 0,
+	jellySelected = 0; 
 	
-// global variables (within this scope)	
+// DOM variables (within this scope)	
 const types = document.getElementById('types');
 const batters = document.getElementById('batters');
 const toppings = document.getElementById('toppings');
@@ -12,7 +13,21 @@ const sprinkles = document.getElementById('sprinkles');
 const right = document.getElementsByClassName('right')[0];
 const ill = document.getElementById('ill');
 const orderBtn = document.getElementById('order-btn');
-let noneClicked = 0;
+
+function update(){
+	const fbD = document.getElementById('fb-donut');
+	const fbB = document.getElementById('fb-batter');
+	const fbT = document.getElementById('fb-topping');
+	const fbS = document.getElementById('fb-sprinkle');
+	const fbJ = document.getElementById('fb-jelly');
+	const fbIll = document.getElementById('fb-ill');
+	fbD.innerHTML = donutSelected;
+	fbB.innerHTML = batterSelected;
+	fbT.innerHTML = toppingSelected;
+	fbS.innerHTML = sprinkleSelected;
+	fbJ.innerHTML = jellySelected;
+	fbIll.textContent = ill.innerHTML;
+}
 
 	// var glob = [];
 // var URL = 'http://www.richardkeightley.com/assets/donuts.json';
@@ -26,11 +41,11 @@ const glob = [
 		"id": "0",
 		"name": "Cake",
 		"batters": [{
-			"id":"21",
+			"id":"b21",
 			"name": "Regular",
 			"url": "images/CAKE_reg.png"	
 		}, {
-			"id": "22",
+			"id": "b22",
 			"name": "Chocolate",
 			"url": "images/CAKE_choc.png"	
 		}],
@@ -38,7 +53,7 @@ const glob = [
 			[{ 
 				"id": "110", 
 				"type": "None", 
-				"url": "images/CAKE_reg.png" },
+				"url": "" },
 			{ 
 				"id": "111", 
 				"type": "Glazed",
@@ -66,6 +81,10 @@ const glob = [
 			}],
 		"sprinkles": 
 			[{ 
+				"id": "200", 
+				"name": "None",
+				"url": "" 
+			},{ 
 				"id": "201", 
 				"name": "Chocolate",
 				"url":"images/CAKE-topping_chocolate_sprinkles.png" 
@@ -80,7 +99,7 @@ const glob = [
 		"id": "1",
 		"name": "Raised",
 		"batters": [{
-			"id":"21",
+			"id":"b21",
 			"name": "Regular",
 			"url": "images/RAISED_reg.png"	
 		}],
@@ -88,7 +107,7 @@ const glob = [
 			[{ 
 				"id": "110", 
 				"type": "None", 
-				"url": "images/RAISED_reg.png" },
+				"url": "" },
 			{ 
 				"id": "111", 
 				"type": "Glazed",
@@ -116,6 +135,10 @@ const glob = [
 			}],
 		"sprinkles": 
 			[{ 
+				"id": "200", 
+				"name": "None",
+				"url": "" 
+			},{ 
 				"id": "201", 
 				"name": "Chocolate",
 				"url":"images/RAISED-topping_chocolate_sprinkles.png" 
@@ -130,11 +153,11 @@ const glob = [
 		"id": "2",
 		"name": "Old Fashioned",
 		"batters": [{
-			"id":"21",
+			"id":"b21",
 			"name": "Regular",
 			"url": "images/OF_reg.png"	
 		}, {
-			"id": "22",
+			"id": "b22",
 			"name": "Chocolate",
 			"url": "images/OF_choc.png"	
 		}],
@@ -142,7 +165,7 @@ const glob = [
 		[{ 
 			"id": "110", 
 			"type": "None", 
-			"url": "images/OF_reg.png" },
+			"url": "" },
 		{ 
 			"id": "111", 
 			"type": "Glazed",
@@ -168,7 +191,7 @@ const glob = [
 		"id": "3",
 		"name": "Jelly-filled",
 		"batters": [{
-			"id":"21",
+			"id":"b21",
 			"name": "Regular",
 			"url": "images/JELLY_reg.png"	
 		}],
@@ -176,19 +199,19 @@ const glob = [
 			[{ 
 				"id": "110", 
 				"type": "None", 
-				"url": "images/JELLY_reg.png" },
+				"url": "" },
 			{ 
-				"id": "112", 
-				"type": "Chocolate",
+				"id": "111", 
+				"type": "Chocolate<br><span class='small'>(with custard filling)</span>",
 				"url":"images/JELLY-topping_chocolate.png" 
 			},
 			{ 
-				"id": "114", 
+				"id": "112", 
 				"type": "Sugar",
 				"url":"images/JELLY-topping_sugar.png" 
 			},
 			{ 
-				"id": "115", 
+				"id": "113", 
 				"type": "Powdered Sugar",
 				"url":"images/JELLY-topping_powdered_sugar.png" 
 			}],
@@ -202,11 +225,6 @@ const glob = [
 				"id": "302", 
 				"name": "lemon",
 				"url": "images/JELLY-lemon.png"
-			},
-			{ 
-				"id": "303", 
-				"name": "cream",
-				"url": "images/JELLY-cream.png"
 			}]
 	}];
 
@@ -253,86 +271,108 @@ function hide(className){
 setTimeout(() => {
 	show(types);
 	activateTypes();
-	showTypePic(donutSelected);
+	showBasePic(donutSelected, 0);
 }, 100);
 
 function activateTypes(){
-	const divTypes = document.getElementById('div-types');
+	let divTypes = document.getElementById('div-types');
 	divTypes.addEventListener('mouseover', () => {
 		right.style.top = 20 + 'px';
 	});
-	divTypes.addEventListener('click', (e) => {
-		disableOrder();
-		switch (e.target.id) {
-			case 'type-cake': donutSelected = 0;
-			break;
-			case 'type-raised': donutSelected = 1;
-			break;
-			case 'type-OF': donutSelected = 2;
-			break;
-			case 'type-jelly': donutSelected = 3;
-			break;
-		}
-		console.log('donutSelected: ' + donutSelected);
-		adjustButtons(donutSelected, 'type');
-		displayBatters(donutSelected);
-		showTypePic(donutSelected);
-	});
+	divTypes.addEventListener('click', handleTypeClick);
 }
 
-function displayBatters(choice) {
-	// hide all other "choice" divs
+function handleTypeClick(e){
+	let divTypes = document.getElementById('div-types');
+	divTypes.removeEventListener('click', handleTypeClick);
+	disableOrder();
+	switch (e.target.id) {
+		case 'type-cake': donutSelected = 0;
+		break;
+		case 'type-raised': donutSelected = 1;
+		break;
+		case 'type-OF': donutSelected = 2;
+		break;
+		case 'type-jelly': donutSelected = 3;
+		break;
+	}
+	batterSelected = 0;
+	toppingSelected = 0;
+	sprinkleSelected = 0;
+	adjustButtons(donutSelected, 'type');
+	displayBatters(donutSelected);
+	showBasePic(donutSelected, batterSelected);
+	setTimeout(() => {
+		divTypes.addEventListener('click', handleTypeClick);
+	}, 200);
+	update();
+}
+
+function displayBatters(donutSelected) {
+	// reset and hide all other "choice" divs
+	toppingSelected = 0;
+	sprinkleSelected = 0;
 	hide(sprinkles);
 	hide(toppings);
 
 	// create "batter" choices below the donut type
 	show(batters);
 	let divBatters = document.getElementById('div-batters');
-	var batterChoices = glob[choice].batters;
+	var batterChoices = glob[donutSelected].batters;
 	var str = "";
 	for (batter of batterChoices) {
 		str += `<span class="btn batter" id="${batter.id}">${batter.name}</span>`;
 	}
 	divBatters.innerHTML = str;
-
+	
 	// add event listener
 	divBatters.addEventListener('mouseover', () => {
 		right.style.top = 110 + 'px';
-
+		
 	});
 	let batterCount = document.getElementsByClassName('batter').length;
 	if (batterCount < 2) {
 		setTimeout(() => {
-			showTypePic(donutSelected);
-			displayToppings(choice);
+			showBasePic(donutSelected, 0);
+			displayToppings(donutSelected);
 		}, 500);
 	}
 	else {
-		divBatters.addEventListener('click', (e) => {
-			disableOrder();
-			console.log('batterSelected: ' + e.target.id);
-			switch(e.target.id) {
-				case '21': batterSelected = 0;
-				break;
-				case '22': batterSelected = 1;
-				break;
-			}
-			adjustButtons(batterSelected, 'batter');
-			showTypePic(donutSelected, e.target.id);
-			displayToppings(choice);
-		});
+		divBatters.addEventListener('click', handleBatterClick);
 	}
 }
 
-function displayToppings(choice) {
-	// hide other "choice" divs
+function handleBatterClick(e) {
+	let divBatters = document.getElementById('div-batters');
+	divBatters.removeEventListener('click', handleBatterClick);
+	disableOrder();
+	switch(e.target.id) {
+		case 'b21': batterSelected = 0;
+		break;
+		case 'b22': batterSelected = 1;
+		break;
+	}
+	toppingSelected = 0;
+	sprinkleSelected = 0;
+	adjustButtons(batterSelected, 'batter');
+	showBasePic(donutSelected, batterSelected);
+	displayToppings(donutSelected);
+	setTimeout(() => {
+		divBatters.addEventListener('click', handleBatterClick);
+	}, 200);
+	update();
+}
+
+function displayToppings(donutSelected) {
+	// reset and hide other "choice" divs
+	sprinkleSelected = 0;
 	hide(sprinkles);
 	removeAllSprinkles();
 	
 	// create toppings below 
 	show(toppings);
 	let divToppings = document.getElementById('div-toppings');
-	var tops = glob[choice].toppings;
+	var tops = glob[donutSelected].toppings;
 	let str = "";
     for (topping of tops) {
 		// add small buttons
@@ -342,55 +382,58 @@ function displayToppings(choice) {
 	
 	// add event listener
 	divToppings.addEventListener('mouseover', () => {
-		right.style.top = 220 + 'px';
+		right.style.top = 200 + 'px';
 	});
-	divToppings.addEventListener('click', (e) => {
-		removeAllSprinkles();
-		toppingSelected = parseInt(e.target.id) - 110;
-		console.log('toppingSelected: ' + toppingSelected);
-		displaySprinkles(choice);
-		if (toppingSelected == 0 || toppingSelected == 5 || donutSelected == 2) {
-			hide(sprinkles);
-			noneClicked = 1;
-			allowOrder();
-			adjustButtons(toppingSelected, 'topping');
-			showToppingPic(toppingSelected); 
-		} else {
+	divToppings.addEventListener('click', handleToppingClick);
+}
+
+function handleToppingClick(e) {
+	disableOrder();
+	let divToppings = document.getElementById('div-toppings');
+	divToppings.removeEventListener('click', handleToppingClick); // fires only once
+	removeAllSprinkles();
+	toppingSelected = parseInt(e.target.id) - 110;
+	sprinkleSelected = 0;
+	displaySprinkles(donutSelected);
+	if (donutSelected == 3) {
+		if (toppingSelected == 0)
 			disableOrder();
-			adjustButtons(toppingSelected, 'topping');
-			showToppingPic(toppingSelected); 
+		if (toppingSelected == 1) {
+			hide(sprinkles);
+			allowOrder();
 		}
-	});
-}
-
-function allowOrder(){
-	orderBtn.addEventListener('click', orderDonut);
-}
-
-function disableOrder(){
-	orderBtn.removeEventListener('click', orderDonut);
-}
-
-function orderDonut(){
-	console.log('Donut ordered.');
+	}
+	else if (toppingSelected == 0 || toppingSelected == 5 || donutSelected == 2) {
+		hide(sprinkles);
+		allowOrder();
+	} else {
+		disableOrder();
+	}
+	adjustButtons(toppingSelected, 'topping');
+	showBasePic(donutSelected, batterSelected);
+	showToppingPic(toppingSelected); 
+	setTimeout(() => {
+		divToppings.addEventListener('click', handleToppingClick);
+	}, 200);
+	update();
 }
 
 function displaySprinkles(choice){
 	show(sprinkles);
-	var variable = "";
+	let word = "";
 	var sprinkleChoices;
 	let str = "";
 	if (donutSelected == 3) {
-		// show options for jelly donuts
-		variable = "Filling";
-		sprinkleChoices = glob[donutSelected].jellies;
+		// options for jelly donuts
+		word = "Filling";
+		sprinkleChoices = glob[donutSelected].filling;
 		if (sprinkleChoices) {
-			for (sprinkle of sprinkleChoices) {
-				str += `<span class="btn topping" id="${sprinkle.id}">${sprinkle.name}</span>`;
+			for (filling of sprinkleChoices) {
+				str += `<span class="btn topping" id="${filling.id}">${filling.name}</span>`;
 			}
 		}
 	} else {
-		variable = "Sprinkle";
+		word = "Sprinkle";
 		sprinkleChoices = glob[choice].sprinkles;
 		if (sprinkleChoices) {
 			for (sprinkle of sprinkleChoices) {
@@ -400,34 +443,52 @@ function displaySprinkles(choice){
 		
 	}
 	let sprinklesOrJelly = document.getElementById('sprinkles-or-jelly');
-	sprinklesOrJelly.innerHTML = `4. Select Donut ${variable}`;
-	var divSprinkles = document.getElementById('div-sprinkles');
+	sprinklesOrJelly.innerHTML = `4. Select Donut ${word}`;
+	let divSprinkles = document.getElementById('div-sprinkles');
 	divSprinkles.innerHTML = str;
-
+	
 	// add event listener
-	divSprinkles.addEventListener('click', (e) => {
-		showSprinklePic(e.target.id - 201);
+	divSprinkles.addEventListener('mouseover', () => {
+		right.style.top = 230 + 'px';
 	});
+	divSprinkles.addEventListener('click', handleSprinkleClick);
 }
 
-function displayJelly(){
-	var jellies = document.createElement('DIV');
-	var str = '<br>Filling<br>';
-	toppings.appendChild(jellies);
-	var jellyChoices = glob[3].filling;
-
-	for (jelly of jellyChoices) {
-		str+= `<div class="btn topping" id="${jelly.id}">${jelly.type}</div>`;
-	}
-	jellies.innerHTML = str;
+function handleSprinkleClick(e) {
+	let divSprinkles = document.getElementById('div-sprinkles');
+	divSprinkles.removeEventListener('click', handleSprinkleClick); // disable event listener
+	sprinkleSelected = e.target.id - 200;
+	removeAllSprinkles();
+	showSprinklePic(sprinkleSelected);
+	// turn event listener back on 
+	setTimeout(() => {
+		divSprinkles.addEventListener('click', handleSprinkleClick);
+	}, 200);
+	update();
 }
 
-function showTypePic(donutSelected, id){
-	var idx = 0;
-	if (id == '22')
-		idx = 1;
-	var basePic = glob[donutSelected].batters[idx].url;
-	ill.innerHTML = `<img src="${basePic}">`;
+function allowOrder(){
+	orderBtn.disabled = false;
+	orderBtn.style.background = '#99c68e';
+	orderBtn.addEventListener('mouseover', () => {
+		orderBtn.style.color = 'white';
+		orderBtn.style.backgroundColor = '#3EA055';
+	});
+	orderBtn.addEventListener('mouseout', () => {
+		orderBtn.style.color = '#eee';
+		orderBtn.style.backgroundColor = '#99c68e';
+	});
+	orderBtn.addEventListener('click', orderDonut);
+}
+
+function disableOrder(){
+	orderBtn.disabled = true;
+	orderBtn.style.backgroundColor = 'lightgrey';
+	orderBtn.removeEventListener('click', orderDonut);
+}
+
+function orderDonut(){
+	console.log('Donut ordered.');
 }
 
 function adjustButtons(idx, className) {
@@ -439,28 +500,45 @@ function adjustButtons(idx, className) {
 	buttons[idx].classList.add('active');
 }
 
-function showToppingPic(idx) {
-		removeAllToppings();
-		let topping = glob[donutSelected].toppings[idx];
-		var toppingImg = document.createElement('IMG');
-		toppingImg.setAttribute('class', `donut-topping` );
-		toppingImg.setAttribute('id', `topping-${topping.id}` );
-		toppingImg.setAttribute('src', topping.url );
-		ill.appendChild(toppingImg);
+function showBasePic(donutSelected, batterSelected){
+	ill.innerHTML = "";
+	var basePic = glob[donutSelected].batters[batterSelected].url;
+	ill.innerHTML = `<img src="${basePic}">`;
 }
 
-function showSprinklePic(id) {
+function showToppingPic(idx) {
+	removeAllToppings();
+	let topping = glob[donutSelected].toppings[idx];
+	var toppingImg = document.createElement('IMG');
+	toppingImg.setAttribute('class', `donut-topping` );
+	toppingImg.setAttribute('id', `topping-${topping.id}` );
+	toppingImg.setAttribute('src', topping.url );
+	ill.appendChild(toppingImg);
+}
+
+function showSprinklePic(idx) {
 	removeAllSprinkles();
-	let sprinkle = glob[donutSelected].sprinkles[id];
-	var sprinkleImg = document.createElement('IMG');
-	sprinkleImg.setAttribute('class', 'donut-topping');
-	sprinkleImg.setAttribute('id', `sprinkle-${sprinkle.id}`);
-	sprinkleImg.setAttribute('src', sprinkle.url);
+	if (donutSelected == 3) {
+		let filling = glob[3].filling[idx-101];
+		var sprinkleImg = document.createElement('IMG');
+		sprinkleImg.setAttribute('class', 'donut-sprinkle');
+		sprinkleImg.setAttribute('id', `sprinkle-${filling.id}`);
+		sprinkleImg.setAttribute('src', filling.url);
+	} else {
+		let sprinkle = glob[donutSelected].sprinkles[idx];
+		var sprinkleImg = document.createElement('IMG');
+		sprinkleImg.setAttribute('class', 'donut-sprinkle');
+		sprinkleImg.setAttribute('id', `sprinkle-${sprinkle.id}`);
+		sprinkleImg.setAttribute('src', sprinkle.url);
+	}
 	ill.appendChild(sprinkleImg);
 	allowOrder();
 }
 
 function removeAllSprinkles(){
+	// remove all elements with 
+	removeByClass('donut-sprinkle');
+	
 	var delChocSprinkles = document.getElementById('sprinkle-201');
 	if (delChocSprinkles)
 		delChocSprinkles.parentNode.removeChild(delChocSprinkles);
@@ -486,6 +564,13 @@ function removeAllToppings(){
 	if (delPowdered)
 		delPowdered.parentNode.removeChild(delPowdered);
 }
+
+function removeByClass(className) {
+	let els = document.getElementsByClassName(className);
+	while (els.length > 0)
+		els[0].parentNode.removeChild(els[0]);
+}
+
 }();
 
 donutOrder;

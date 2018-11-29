@@ -1,13 +1,21 @@
 <!DOCTYPE html>
 <html lang='en'>
 <head>
-    <title>Callbacks</title>
+    <title>$2 Donut Delivery</title>
     <link rel='stylesheet' href='donuts.css' type="text/css">
 </head>
 <body>
+    <div id='fb'>
+        Donut: <span id='fb-donut'></span><br>
+        Batter: <span id='fb-batter'></span><br>
+        Topping: <span id='fb-topping'></span><br>
+        Sprinkle: <span id='fb-sprinkle'></span><br>
+        Jelly: <span id='fb-jelly'></span><br>
+        Ill div: <span id='fb-ill'></span>
+    </div>
     <div id='container'>
         <h2>$2 Donut Delivery</h2>
-        <p class='centered'>Customized donuts delivered to your cubicle!</p>
+        <p class='centered' id='kicker'>Delicious donuts delivered to your door!<br>(or cubicle)</p>
         <div id='the-cols'>
             <div class='info left'>
                 <div class='category' id='types'>
@@ -39,7 +47,7 @@
 
             <div class='info right' id='ill'></div>
         </div>
-        <div id='order-btn'>Submit order</div>
+        <button id='order-btn' disabled>Submit order</button>
     </div>
 
 <script src="donuts.js" type="text/javascript"></script>

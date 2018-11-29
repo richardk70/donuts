@@ -21,7 +21,7 @@ body{
     top: 10%;
     transform: translateX(-50%);
     min-width: 450px;
-    min-height: 530px;
+    min-height: 540px;
     border-radius: 10px;
     background: #fff8dc;
     padding: 0px 20px;
@@ -35,6 +35,15 @@ h2 {
 
 .centered{
     text-align: center;
+}
+
+.small{
+    font-size: 0.8rem;
+}
+
+#kicker{
+    padding-top: 0;
+    margin-top: 0;
 }
 
 #the-cols {
@@ -110,15 +119,16 @@ h2 {
 .topping {
     flex: 0 1 auto;
     min-width: 20px;
-    font-size: .9rem;
+    font-size: .9em;
     font-weight: 400;
     padding: 0 6px;
     margin: 2px;
-    background: maroon;
+    background: #9f000f;;
     color: #eee;
+    line-height: 1.2rem;
 }
 .topping:hover {
-    background: red;
+    background: #c11b17;
 }
 .active{
     color: white;
@@ -135,39 +145,44 @@ h2 {
 .batter:hover{
     color: white;
 }
-#batter-21 {
+#b21 {
     background: var(--regular);
 }
-#batter-22 {
+#b22 {
     background: var(--chocolate);
 }
-#batter-21:hover {
+#b21:hover {
     background: #af9574;
+    color: white;
 }
-#batter-22:hover {
+#b22:hover {
     background: #72654a;
+    color: white;
 }
 
 #order-btn{
-    position: relative;
-    top: 160px;
-    width: 100%;
+    position: absolute;
+    top: 500px;
+    width: 80%;
     height: 30px;
-    left: 0;
+    left: 50%;
+    transform: translateX(-50%);
     border-radius: 6px;
     text-align: center;
     line-height: 30px;
     color: #eee;
-    background: rgb(57, 105, 57);
+    background: lightgrey;
     cursor: pointer;
     font-weight: 600;
+    font-size: 1em;
+    box-shadow: none;
+    border: 0;
 }
 
-#order-btn:hover {
-    color: white;
-    background: rgb(113, 158, 113);
+#fb{
+    font-size: 0.8rem;
+    max-width: 300px;
 }
-
 
 
 
